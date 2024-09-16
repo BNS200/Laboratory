@@ -1,28 +1,36 @@
-#include <iostream>
 #pragma once
+#include <iostream>
+#include <stdexcept>
+class Fraction
+{
+private:
+	int numerator;
+	int denominator;
 
-class Fraction {
-    public:
-       void setNumerator(int numerator){
-           this->numerator = numerator;
-       }
-       void setDenomenator(int denomenator){
-           this->denomenator = denomenator;
-       }
-       int getNumerator(){
-           return this->numerator;
-       }
-       int getDenomenator(){
-           return this->denomenator;
-       }
-       Fraction(int numerator = 0,int denomenator = 1){
-           setNumerator(numerator);
-           setDenomenator(denomenator);
-           if (denomenator == 0)
-               throw std::invalid_argument("Значение знаменателя не может быть ноль");
-       }
+public:
+	Fraction(int numerator = 0, int denominator = 1) {
+		setNumerator(numerator);
+		setDenominator(denominator);
+	}
+	int getNumerator() {
+		return this->numerator;
+	}
+	int getDenominator() {
+		return this->denominator;
+	}
+	void setNumerator(int numerator) {
+		this->numerator = numerator;
+	}
+	void setDenominator(int denominator) {
+		this->denominator = denominator;
+	}
 
-       private:
-            int numerator;
-            int denomenator;
+	Fraction operator+(Fraction b);
+	Fraction operator-(Fraction b);
+	Fraction operator*(Fraction b);
+	Fraction operator/(Fraction b);
+	bool operator<(Fraction b);
+	bool operator>(Fraction b);
+	bool operator==(Fraction b);
+	bool operator!=(Fraction b);
 };
