@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <stdexcept>
+
 class Fraction
 {
 private:
@@ -8,37 +9,45 @@ private:
 	int denominator;
 
 public:
-	Fraction(int numerator = 0, int denominator = 1) {
+	Fraction(const int numerator = 0, const int denominator = 1)
+	{
 		setNumerator(numerator);
 		setDenominator(denominator);
-		if (denominator == 0) {
-            throw std::invalid_argument("Знаменатель не может быть нулем.");
-        }
 	}
-	inline int getNumerator()  const {
+
+	inline int getNumerator() const noexcept
+	{
 		return this->numerator;
 	}
-	inline int getDenominator() const {
+
+	inline int getDenominator() const noexcept
+	{
 		return this->denominator;
 	}
-	inline void setNumerator(int numerator) {
+
+	inline void setNumerator(const int numerator) noexcept
+	{
 		this->numerator = numerator;
     }
-    inline void setDenominator(int denominator){
+
+    inline void setDenominator(const int denominator)
+	{
+		if (denominator == 0)
+            throw std::invalid_argument("Знаменатель не может быть нулем.");
+
 		this->denominator = denominator;
 	}
 
-	Fraction operator+(Fraction b);
-	Fraction operator-(Fraction b);
-	Fraction operator*(Fraction b);
-	Fraction operator/(Fraction b);
-	bool operator<(Fraction b);
-	bool operator>(Fraction b);
-	bool operator==(Fraction b);
-	bool operator!=(Fraction b);
+	Fraction& operator+(const Fraction& fraction);
+	Fraction& operator-(const Fraction& fraction);
+	Fraction& operator*(const Fraction& fraction);
+	Fraction& operator/(const Fraction& fraction);
 
+	bool operator<(const Fraction& fraction) const;
+	bool operator>(const Fraction& fraction) const;
+	bool operator==(const Fraction& fraction) const;
+	bool operator!=(const Fraction& fraction) const;
 
-	void OutputFraction();
+	void OutputFraction() const;
 	Fraction InputFraction();
-
 };

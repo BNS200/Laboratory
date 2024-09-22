@@ -1,65 +1,62 @@
-#include <iostream>
 #include "Fraction.h"
 
-Fraction Fraction::operator+(Fraction b)
+Fraction& Fraction::operator+(const Fraction& fraction)
 {
-    Fraction result;
-    result.setDenominator(this->denominator * b.denominator);
-    result.setNumerator(this->numerator * b.denominator + this->denominator * b.numerator);
-    return result;
+    this->setNumerator(this->numerator * fraction.denominator + this->denominator * fraction.numerator);
+    this->setDenominator(this->denominator * fraction.denominator);
+    return *this;
 }
 
-Fraction Fraction::operator-(Fraction b)
+Fraction& Fraction::operator-(const Fraction& fraction)
 {
-    Fraction result;
-    result.setDenominator(this->denominator * b.denominator);
-    result.setNumerator(this->numerator * b.denominator + this->denominator * b.numerator);
-    return result;
+    this->setNumerator(this->numerator * fraction.denominator - this->denominator * fraction.numerator);
+    this->setDenominator(this->denominator * fraction.denominator);
+    return *this;
 }
 
-Fraction Fraction::operator*(Fraction b)
+Fraction& Fraction::operator*(const Fraction& fraction)
 {
-    Fraction result;
-    result.setDenominator(this->denominator * b.denominator);
-    result.setNumerator(this->numerator * b.numerator);
-    return result;
+    this->setNumerator(this->numerator * fraction.numerator);
+    this->setDenominator(this->denominator * fraction.denominator);
+    return *this;
 }
 
-Fraction Fraction::operator/(Fraction b)
+Fraction& Fraction::operator/(const Fraction& fraction)
 { 
-    Fraction result;
-    result.setDenominator(this->denominator * b.numerator);
-    result.setNumerator(this->numerator * b.denominator);
-    return result;   
+    this->setNumerator(this->numerator * fraction.denominator);
+    this->setDenominator(this->denominator * fraction.numerator);
+    return *this;
 }
 
-
-bool Fraction::operator<(Fraction b) {
-	return (this->numerator * b.denominator < this->denominator * b.numerator);
-}
-bool Fraction::operator>(Fraction b) {
-	return (this->numerator * b.denominator > this->denominator * b.numerator);
-}
-bool Fraction::operator==(Fraction b) {
-	return (this->numerator * b.denominator == this->denominator * b.numerator);
-}
-bool Fraction::operator!=(Fraction b) {
-	return (this->numerator * b.denominator != this->denominator * b.numerator);
+bool Fraction::operator<(const Fraction& fraction) const
+{
+	return this->numerator / fraction.denominator < this->denominator / fraction.numerator;
 }
 
-void Fraction::OutputFraction(){
+bool Fraction::operator>(const Fraction& fraction) const
+{
+	return fraction < *this;
+}
+
+bool Fraction::operator==(const Fraction& fraction) const
+{
+	return this->numerator == fraction.numerator and this->denominator == fraction.denominator;
+}
+
+bool Fraction::operator!=(const Fraction& fraction) const
+{
+	return !(*this == fraction);
+}
+
+void Fraction::OutputFraction() const
+{
     std::cout << numerator << "/" << denominator << std::endl;
 }
+
 Fraction Fraction::InputFraction()
 {
-	Fraction number;
-	std::cin >> number.numerator;
+	std::cin >> numerator;
 	std::cout << "/";
-	std::cin >> number.denominator;
+	std::cin >> denominator;
+    return Fraction(numerator, denominator);
 }
- int main()
- {
-     Fraction c;
-
-     
- }
