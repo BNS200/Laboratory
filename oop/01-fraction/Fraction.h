@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <numeric>
+#include <cmath>
 #include <stdexcept>
 
 class Fraction
@@ -13,6 +15,7 @@ public:
 	{
 		setNumerator(numerator);
 		setDenominator(denominator);
+		IrreducibleFraction();
 	}
 
 	inline int getNumerator() const noexcept
@@ -36,18 +39,23 @@ public:
             throw std::invalid_argument("Знаменатель не может быть нулем.");
 
 		this->denominator = denominator;
-	}
+	}	
 
 	Fraction& operator+(const Fraction& fraction);
 	Fraction& operator-(const Fraction& fraction);
 	Fraction& operator*(const Fraction& fraction);
 	Fraction& operator/(const Fraction& fraction);
+	Fraction pow(int exponent);
+	Fraction sqrt();
+
 
 	bool operator<(const Fraction& fraction) const;
 	bool operator>(const Fraction& fraction) const;
 	bool operator==(const Fraction& fraction) const;
 	bool operator!=(const Fraction& fraction) const;
-
-	void OutputFraction() const;
+	
 	Fraction InputFraction();
+	void OutputFraction() const;
+	void IrreducibleFraction();
+
 };

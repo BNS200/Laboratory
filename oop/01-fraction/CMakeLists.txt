@@ -1,4 +1,4 @@
-project(Fraction)
+project(fraction)
 cmake_minimum_required(VERSION 3.22)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -18,3 +18,5 @@ target_link_libraries(fraction GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(fraction)
+
+set(GTEST_TIMEOUT 10)
