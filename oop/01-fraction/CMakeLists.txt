@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
-set(CMAKE_TOOLCHAIN_FILE "/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+
 project(fraction)
 
 set(CMAKE_CXX_STANDARD 20)

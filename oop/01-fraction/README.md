@@ -1,17 +1,13 @@
 # Fractions
 
 ## Prerequisites
-- Swich to project root
-- Run `vcpkg install`
+- Execute `vcpkg install` from project root
 
 ## Configure
-- Swich to project root
-- Run `cmake -B build -S .`
+- Execute `cmake -B build -S .` from project root or `cmake ..` from build subfolder
 
 ## Build
-- Swich to project root
-- Run `cmake --build build`
+- Execute `cmake --build build` from project root or `make` from build subfolder
 
 ## Test
-- Swich to project root
-- Run `ctest --test-dir build`
+- Execute `ctest --test-dir build` from project root or `ctest` from build subfolder
