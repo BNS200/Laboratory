@@ -15,7 +15,11 @@ include(FetchContent)
 FetchContent_Declare(googletest URL https://github.com/google/googletest/archive/b514bdc898e2951020cbdca1304b75f5950d1f59.zip)
 FetchContent_MakeAvailable(googletest)
 #find_package(GTest REQUIRED)
-add_executable(fraction Fraction.cpp Fraction.h TestFraction.cpp)
+
+add_executable(main MainFraction.cpp Fraction.cpp)
+
+add_executable(fraction TestFraction.cpp Fraction.cpp)
+
 target_link_libraries(fraction GTest::gtest_main)
 
 include(GoogleTest)

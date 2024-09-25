@@ -62,3 +62,15 @@ TEST(Fraction, SQRT){
   Fraction frac2(4, 5);
   EXPECT_EQ(frac.sqrt(),frac2);
 }
+
+TEST(Fraction, Equals){
+  Fraction f1(1, 4);
+  Fraction f2(25, 100);
+  EXPECT_TRUE(f1 == f2);
+}
+
+TEST(Fraction, NoEquals){
+  Fraction f1(2, 4);
+  Fraction f2(25, 100);
+  EXPECT_FALSE(f1 == f2);
+}
