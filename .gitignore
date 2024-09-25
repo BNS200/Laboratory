@@ -389,6 +389,7 @@ FodyWeavers.xsd
 **/CMakeFiles
 **/build
 **/builds
+**/vcpkg_installed
 
 # Local History for Visual Studio Code
 .history/
