@@ -1,4 +1,8 @@
+#include <iostream>
+#include <cmath>
+#include <stdexcept>
 #include "Fraction.h"
+#include <numeric>
 
 Fraction& Fraction::operator+(const Fraction& fraction)
 {
