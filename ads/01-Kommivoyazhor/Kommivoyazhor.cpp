@@ -21,8 +21,36 @@ int calculatePathCost(int** distanceMatrix, int* path, int size) {
     return cost;
 }
 
-bool customNextPermutation(int* arr, int size) {
-    return false;
+bool nextPermutation(int* array, int size) {
+    int k = -1;
+    for (int i = 0; i < size - 1; ++i) {
+        if (array[i] < array[i + 1]) {
+            k = i;
+        }
+    }
+
+    if (k == -1) {
+        return false;
+    }
+
+    int l = -1;
+    for (int i = k + 1; i < size; ++i) {
+        if (array[k] < array[i]) {
+            l = i;
+        }
+    }
+
+    int temp = array[k];
+    array[k] = array[l];
+    array[l] = temp;
+
+    for (int left = k + 1, right = size - 1; left < right; ++left, --right) {
+        temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+    }
+
+    return true;
 }
 
 int greedyAlgorithm(int** distanceMatrix, int size, int startCity) {
