@@ -85,7 +85,7 @@ Fraction Fraction::pow(int exponent){
 
 Fraction Fraction::sqrt(){
         if (numerator < 0 || denominator < 0) {
-            throw std::invalid_argument("Число не может быть отрицательным");
+            throw std::invalid_argument("The number cannot be negative");
         }
         return Fraction(static_cast<int>(std::sqrt(numerator)), static_cast<int>(std::sqrt(denominator)));
     }

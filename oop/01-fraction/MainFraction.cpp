@@ -2,7 +2,7 @@
 #include "Fraction.h"
 
 int main() {
-    Fraction fraction(3, 4);
+    Fraction fraction(5, 9);
     fraction.OutputFraction();
 
     Fraction inputFraction;

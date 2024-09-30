@@ -72,5 +72,5 @@ TEST(Fraction, Equals){
 TEST(Fraction, NoEquals){
   Fraction f1(2, 4);
   Fraction f2(25, 100);
-  EXPECT_FALSE(f1 == f2);
+  EXPECT_TRUE(f1 != f2);
 }

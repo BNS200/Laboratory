@@ -36,7 +36,7 @@ public:
     inline void setDenominator(const int denominator)
 	{
 		if (denominator == 0)
-            throw std::invalid_argument("Знаменатель не может быть нулем.");
+            throw std::invalid_argument("The denominator cannot be 0");
 
 		this->denominator = denominator;
 	}	
