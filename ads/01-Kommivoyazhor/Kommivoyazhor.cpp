@@ -22,7 +22,6 @@ int** generateDistanceMatrix(int size) {
     return distanceMatrix;
 }
 
-
 void printDistanceMatrix(int** distanceMatrix, int size) {
     std::cout << "Matrix distance:\n";
     for (int i = 0; i < size; ++i) {
@@ -106,7 +105,6 @@ int greedyAlgorithm(int** distanceMatrix, int size, int startCity, int* path) {
 
     return totalCost;
 }
-
 
 void generateReport(int size) {
     int** distanceMatrix = generateDistanceMatrix(size);
@@ -205,7 +203,6 @@ void generateReport(int size) {
     }
     delete[] distanceMatrix;
 }
-
 
 int main() {
     srand(time(0));
