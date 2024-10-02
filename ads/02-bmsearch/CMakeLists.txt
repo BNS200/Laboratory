@@ -15,41 +15,17 @@ set(CMAKE_C_COMPILER "clang")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Enable C++ modules 'import std' feature and choose vcpkg clang++ toolchain
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
-set(CMake_TEST_CXXModules_UUID "a246741c-d067-4019-a8fb-3d16b0c9d1d3")
 
+# Project setup
 project(bmsearch VERSION 0.0.1 LANGUAGES C CXX)
 
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP 1)
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_MAP_FORMAT "clang")
-
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
-set(CMAKE_CXX_MODULE_STD 1)
-
-# Cmake options
-option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" ON)
-option(ENABLE_ASAN "Enable address sanitizer" ON)
-
-option(ENABLE_CPPCHECK "Enable cppcheck" ON)
-option(ENABLE_CLANG_TIDY "Enable clang-tidy" ON)
-option(ENABLE_CCACHE "Enable ccache" ON)
-
-option(ENABLE_GTEST "Enable unit tests" OFF)
-option(ENABLE_XTENSOR "Enable xtensor" OFF)
-option(ENABLE_CBLAS "Enable cblas" OFF)
-option(ENABLE_EIGEN3 "Enable eigen3" OFF)
-option(ENABLE_NUMCPP "Enable numcpp" OFF)
-option(ENABLE_MKL "Enable Intel MKL" OFF)
-option(ENABLE_TBB "Enable Intel TBB" OFF)
-option(ENABLE_PTHREADS "Enable Intel pthreads" OFF)
-
-# Add base interfaces for the compiled targets
+# Add base interfaces for the project
 add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_23 c_std_23)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -86,6 +62,36 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     -Wlogical-op
     -Wuseless-cast
   )
+endif()
+
+# Cmake options
+option(ENABLE_CXX20_MODULES "Enable C++20 modules" OFF)
+option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" ON)
+option(ENABLE_ASAN "Enable address sanitizer" ON)
+
+option(ENABLE_CPPCHECK "Enable cppcheck" ON)
+option(ENABLE_CLANG_TIDY "Enable clang-tidy" ON)
+option(ENABLE_CCACHE "Enable ccache" ON)
+
+option(ENABLE_GTEST "Enable unit tests" OFF)
+option(ENABLE_XTENSOR "Enable xtensor" OFF)
+option(ENABLE_CBLAS "Enable cblas" OFF)
+option(ENABLE_EIGEN3 "Enable eigen3" OFF)
+option(ENABLE_NUMCPP "Enable numcpp" OFF)
+option(ENABLE_MKL "Enable Intel MKL" OFF)
+option(ENABLE_TBB "Enable Intel TBB" OFF)
+option(ENABLE_PTHREADS "Enable Intel pthreads" OFF)
+
+# Toggle C++20 modules
+if(ENABLE_CXX20_MODULES)
+  set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
+  set(CMake_TEST_CXXModules_UUID "a246741c-d067-4019-a8fb-3d16b0c9d1d3")
+
+  set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP 1)
+  set(CMAKE_EXPERIMENTAL_CXX_MODULE_MAP_FORMAT "clang")
+
+  set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+  set(CMAKE_CXX_MODULE_STD 1)
 endif()
 
 # Toggle code coverage
@@ -137,7 +143,16 @@ endif()
 
 # Add targets
 add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE source/main.cxx)
+target_sources(${PROJECT_NAME} PRIVATE source/bmsearch.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_options project_warnings)
+
+if(ENABLE_CXX20_MODULES)
+  add_library(${PROJECT_NAME}lib)
+  target_sources(${PROJECT_NAME}lib PUBLIC FILE_SET cxx_modules TYPE CXX_MODULES FILES source/module.cxx)
+  target_link_libraries(${PROJECT_NAME}lib PRIVATE project_options project_warnings)
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}lib)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC USE_CXX20_MODULES)
+endif()
 
 # Toggle GoogleTest unit tests
 if(ENABLE_GTEST)
@@ -146,9 +161,18 @@ if(ENABLE_GTEST)
   
   add_executable(${PROJECT_NAME}_test)
   target_sources(${PROJECT_NAME}_test PRIVATE tests/test.cxx)
-  target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+  #target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+  target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
+  target_link_libraries(${PROJECT_NAME}_test PRIVATE project_options project_warnings)
+
+  if(ENABLE_CXX20_MODULES)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}lib)
+    target_compile_definitions(${PROJECT_NAME}_test PUBLIC USE_CXX20_MODULES)
+  endif()
 
   set(GTEST_TIMEOUT 10)
+
+  include(CTest)
   include(GoogleTest)
   gtest_discover_tests(${PROJECT_NAME})
 endif()
@@ -198,4 +222,9 @@ endif()
 if(ENABLE_MKL)
   find_package(MKL CONFIG REQUIRED)
   target_link_libraries(${PROJECT_NAME} PRIVATE MKL::MKL)
+endif()
+
+if(ENABLE_CXX20_MODULES)
+  install(TARGETS ${PROJECT_NAME}lib ARCHIVE PUBLIC_HEADER FILE_SET cxx_modules DESTINATION include CXX_MODULES_BMI DESTINATION share/cxx-modules)
+  include(CPack)
 endif()
