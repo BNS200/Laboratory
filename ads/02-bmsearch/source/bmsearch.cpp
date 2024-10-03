@@ -117,9 +117,10 @@ int main() {
     
     std::vector<int> allOccurrences = findAllOccurrence(text, pattern);
     std::cout << "All occurrences: ";
-    for (int pos : allOccurrences) {
-        std::cout << pos << " ";
+    for (int i = 0; i < allOccurrences.size(); ++i) {
+    std::cout << allOccurrences[i] << " ";
     }
+
     std::cout << std::endl;
 
     int start = 11;
@@ -127,9 +128,10 @@ int main() {
     std::vector<int> rangeOccurrences = findAllIndexOccurrence(text, pattern, start, end);
 
     std::cout << "Occurrences in the range: ";
-    for (int pos : rangeOccurrences) {
-        std::cout << pos << " ";
+    for (int i = 0; i < rangeOccurrences.size (); ++i){
+        std::cout << rangeOccurrences[i] << " ";
     }
+    
     std::cout << std::endl;
 
     return 0;
