@@ -45,7 +45,7 @@ std::vector<int> findAllOccurrence (const std::string& text, const std::string& 
     int sizePattern = pattern.size();
 
     if (sizePattern == 0 || sizeText < sizePattern) {
-        return -1;
+        return occurrence;
     }
 
     std::vector<int> badCharTable = createBadCharTable(pattern);
@@ -58,16 +58,49 @@ std::vector<int> findAllOccurrence (const std::string& text, const std::string& 
             --j;
         }
 
-        if (j == 0){
+        if (j < 0) {
             occurrence.push_back(shift);
-            if (shift + sizePattern < sizeText)
-                
+            if (shift + sizePattern < sizeText) {
+                int badCharIndex = badCharTable[text[shift + sizePattern]];
+                shift += sizePattern - badCharIndex;
+            } else {
+                int badChar = text[shift + j];
+                shift += badCharTable[badChar];
+                }
+        }
+    }
+    return occurrence;
+}
 
+std::vector<int> findAllInRange(const std::string& text, const std::string& pattern, int start, int end) {
+    std::vector<int> occurrence;
+    int sizeText = text.size();
+    int sizePattern = pattern.size();
+
+
+    if (sizePattern == 0 || sizeText < sizePattern || start < 0 || end >= sizeText || start > end) {
+        return occurrence;
+    }
+    std::vector<int> badCharTable = createBadCharTable(pattern);
+
+    int shift = start;
+    while (shift <= end - sizePattern + 1) {
+        int j = sizePattern - 1;
+
+        while (j >= 0 && pattern[j] == text[shift + j]) {
+            --j;
         }
 
-    }   
-
-
-
-
+        if (j < 0) {
+            occurrence.push_back(shift);
+            if (shift + sizePattern < sizeText) {
+                int badCharIndex = badCharTable[text[shift + sizePattern]];
+                shift += sizePattern - badCharIndex;
+            } else {
+                int badChar = text[shift + j];
+                shift += badCharTable[badChar];
+                }
+        }
+    }
+    return occurrence;
 }
