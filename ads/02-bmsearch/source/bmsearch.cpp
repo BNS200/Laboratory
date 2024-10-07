@@ -70,8 +70,8 @@ std::vector<int> findAllIndexOccurrence(const std::string& text, const std::stri
 }
 
 int main() {
-    std::string text = "ababcabcabababdababdabcdbdababd";
-    std::string pattern = "ababd";
+    std::string text = "metadata";
+    std::string pattern = "data";
 
     int firstOccurrence = findFirstPattern(text, pattern);
     std::cout << "First occurrence: " << firstOccurrence << std::endl;
@@ -86,7 +86,7 @@ int main() {
 
     std::cout << std::endl;
 
-    int start = 11;
+    int start = 0;
     int end = text.size() - 1;
     std::vector<int> rangeOccurrences = findAllIndexOccurrence(text, pattern, start, end);
 

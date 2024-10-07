@@ -106,6 +106,33 @@ int greedyAlgorithm(int** distanceMatrix, int size, int startCity, int* path) {
     return totalCost;
 }
 
+void findBestAndWorstPaths(int** distanceMatrix, int size, int startCity, int* cities, int* bestPath, int* worstPath, int& exactSolutionCost, int& worstSolutionCost) {
+    do {
+        int* fullPath = new int[size];
+        fullPath[0] = startCity;
+        
+        for (int i = 0; i < size - 1; ++i) {
+            fullPath[i + 1] = cities[i];
+        }
+
+        int currentCost = calculatePathCost(distanceMatrix, fullPath, size);
+        if (currentCost < exactSolutionCost) {
+            exactSolutionCost = currentCost;
+            for (int i = 0; i < size; ++i) {
+                bestPath[i] = fullPath[i];
+            }
+        }
+        if (currentCost > worstSolutionCost) {
+            worstSolutionCost = currentCost;
+            for (int i = 0; i < size; ++i) {
+                worstPath[i] = fullPath[i];
+            }
+        }
+
+        delete[] fullPath;
+    } while (nextPermutation(cities, size - 1));
+}
+
 void generateReport(int size) {
     int** distanceMatrix = generateDistanceMatrix(size);
     printDistanceMatrix(distanceMatrix, size);
@@ -127,30 +154,7 @@ void generateReport(int size) {
 
     auto startTimeExact = std::chrono::high_resolution_clock::now();
 
-    do {
-        int* fullPath = new int[size];
-        fullPath[0] = startCity;
-        
-        for (int i = 0; i < size - 1; ++i) {
-            fullPath[i + 1] = cities[i];
-        }
-
-        int currentCost = calculatePathCost(distanceMatrix, fullPath, size);
-        if (currentCost < exactSolutionCost) {
-            exactSolutionCost = currentCost;
-                for (int i = 0; i < size; ++i) {
-                    bestPath[i] = fullPath[i];
-                }
-        }
-        if (currentCost > worstSolutionCost) {
-            worstSolutionCost = currentCost;
-                for (int i = 0; i < size; ++i) {
-                    worstPath[i] = fullPath[i];
-                 }
-        }           
-
-        delete[] fullPath;
-    } while (nextPermutation(cities, size - 1));
+    findBestAndWorstPaths(distanceMatrix, size, startCity, cities, bestPath, worstPath, exactSolutionCost, worstSolutionCost);
 
     auto endTimeExact = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> timeExact = endTimeExact - startTimeExact;
@@ -190,7 +194,8 @@ void generateReport(int size) {
         std::cout << greedyPath[i] << " ";
     }
     std::cout << "\n";
-        std::cout << "- Greedy solution time: " << timeGreedy.count() << " seconds\n";
+    
+    std::cout << "- Greedy solution time: " << timeGreedy.count() << " seconds\n";
     std::cout << "- Quality of greedy solution: " << qualityGreedySolution << "%\n";
 
     delete[] bestPath;
