@@ -3,11 +3,11 @@
 
 int main() {
     Fraction fraction(5, 9);
-    fraction.OutputFraction();
+    fraction.outputFraction();
 
     Fraction inputFraction;
-    inputFraction.InputFraction();
-    inputFraction.OutputFraction();
+    inputFraction.inputFraction();
+    inputFraction.outputFraction();
 
     return 0;
 }

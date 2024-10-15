@@ -1,17 +1,31 @@
 #pragma once
 #include <iostream>
 #include <assert.h>
+#include <algorithm>
+#include <utility>
+
 
 
 template<typename T>
 class Array
 {
 public:
+    typedef T* iterator;
+    typedef T value_type;
+    typedef T& reference;
+    typedef T* pointer;
+    typedef int difference_type;
+
+public:
     Array(int size, const T fillvalue = T());
     Array(const Array& other);
     Array(Array&& other);
     ~Array();
 
+    iterator begin();
+    iterator end();
+    const iterator begin() const;
+    const iterator end() const;
     void outputArray() const;
     void inputArray();
     int getSize() const noexcept;
@@ -30,7 +44,9 @@ public:
     Array& operator+=(const Array& other);
     bool operator!=(Array& other);
     bool operator==(Array& other);
-private:
+    void sortArray();
+
+  private:
     T* m_array = nullptr;
     int m_size = 0;     
 };
@@ -269,3 +285,8 @@ template<typename T>
 bool Array<T>::operator!=(Array& other){
     return !(*this == other);
 }
+
+template<typename T>
+void Array<T>::sortArray() {
+        std::sort(begin(), end());
+    }
