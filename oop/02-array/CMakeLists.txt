@@ -143,8 +143,9 @@ endif()
 
 # Add targets
 add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE source/array.cpp source/array.h)
+target_sources(${PROJECT_NAME} PRIVATE source/mainArray.cpp source/array.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE project_options project_warnings)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 if(ENABLE_CXX20_MODULES)
   add_library(${PROJECT_NAME}lib)
@@ -164,6 +165,7 @@ if(ENABLE_GTEST)
   #target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
   target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
   target_link_libraries(${PROJECT_NAME}_test PRIVATE project_options project_warnings)
+  target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
   if(ENABLE_CXX20_MODULES)
     target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}lib)
