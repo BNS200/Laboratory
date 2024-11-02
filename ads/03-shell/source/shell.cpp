@@ -31,7 +31,6 @@ void shellSortKnuth(std::vector<int>& arr) {
     }
 }
 
-
 void shellSortNormal(std::vector<int>& arr) {
     int sizeArr = arr.size();
     int gap = sizeArr / 2; 
@@ -45,7 +44,6 @@ void shellSortNormal(std::vector<int>& arr) {
         gap /= 2;
     }
 }
-
 
 void shellSortHibbard(std::vector<int>& array) {
     int arraySize = array.size();
@@ -81,6 +79,57 @@ std::vector<int> generateRandomArray(int size, int minValue, int maxValue) {
     return arr;
 }
 
+void writeArrayToFile(const std::string& filename, const std::vector<int>& arr) {
+    std::ofstream outFile(filename);
+    for (size_t i = 0; i < arr.size(); ++i) {
+        outFile << arr[i] << "  ";
+    }
+}
+
 int main() {
+    std::vector<std::pair<int, int>> sizesAndRanges = {
+        {10000, 10}, {10000, 1000}, {10000, 100000},
+        {100000, 10}, {100000, 1000}, {100000, 100000},
+        {1000000, 10}, {1000000, 1000}, {1000000, 100000}
+    };
+
+    std::vector<std::string> sortingNames = {"Knuth", "Normal", "Hibbard"};
+
+    for (size_t i = 0; i < sizesAndRanges.size(); ++i) {
+        const auto& [size, range] = sizesAndRanges[i];
+        
+        std::vector<int> originalArray = generateRandomArray(size, -range, range);
+        
+        std::string filename = "array_" + std::to_string(size) + "_" + std::to_string(range) + ".txt";
+        writeArrayToFile(filename, originalArray);
+
+        for (size_t j = 0; j < sortingNames.size(); ++j) {
+            const auto& sortName = sortingNames[j];
+            double totalTime = 0.0;
+            for (int run = 0; run < 3; ++run) {
+                std::vector<int> arrCopy = originalArray;
+
+                auto start = std::chrono::high_resolution_clock::now();
+                
+                if (sortName == "Knuth") {
+                    shellSortKnuth(arrCopy);
+                } else if (sortName == "Normal") {
+                    shellSortNormal(arrCopy);
+                } else if (sortName == "Hibbard") {
+                    shellSortHibbard(arrCopy);
+                }
+
+                auto end = std::chrono::high_resolution_clock::now();
+                                totalTime += std::chrono::duration<double>(end - start).count();
+
+                if (!isSorted(arrCopy)) {
+                    std::cout << "Error: Array is not sorted correctly using " << sortName << " method" << "\n";
+                }
+            }
+            std::cout << "Average time for " << sortName << " sort on array of size " << size 
+                      << " with range " << range << ": " << totalTime / 3.0 << " seconds" << "\n";
+        }
+    }
+
     return 0;
 }
