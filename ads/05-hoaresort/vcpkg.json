@@ -1,0 +1,19 @@
+﻿{
+  "dependencies": [
+    
+  ],
+  "$move_it_to_dependencies_if_needed": [
+    "gtest",
+    "tbb",
+    "pthread",
+    "numcpp",
+    "intel-mkl",
+    "eigen3",
+    "cblas",
+    "clblas",
+    "xtensor",
+    "xtensor-io",
+    "xtensor-blas"
+    
+  ]
+}
