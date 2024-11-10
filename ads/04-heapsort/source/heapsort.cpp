@@ -34,7 +34,7 @@ bool isSorted(const std::vector<int>& array) {
     return true;
 }
 
-void heapify(std::vector<int>& array, int n, int i) {
+void siftChar(std::vector<int>& array, int n, int i) {
     int largest = i; 
     int left = 2 * i + 1; 
     int right = 2 * i + 2; 
@@ -48,7 +48,7 @@ void heapify(std::vector<int>& array, int n, int i) {
     if (largest != i) {
         std::swap(array[i], array[largest]);
 
-        heapify(array, n, largest);
+        siftChar(array, n, largest);
     }
 }
 
@@ -56,12 +56,12 @@ void heapSort(std::vector<int>& array) {
     int n = array.size();
 
     for (int i = n / 2 - 1; i >= 0; --i)
-        heapify(array, n, i);
+        siftChar(array, n, i);
 
     for (int i = n - 1; i >= 0; --i) {
         std::swap(array[0], array[i]);
 
-        heapify(array, i, 0);
+        siftChar(array, i, 0);
     }
 }
 

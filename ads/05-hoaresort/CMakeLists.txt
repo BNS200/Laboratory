@@ -23,7 +23,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 # Project setup
-project(heapsort VERSION 0.0.1 LANGUAGES C CXX)
+project(hoaresort VERSION 0.0.1 LANGUAGES C CXX)
 
 # Add base interfaces for the project
 add_library(project_options INTERFACE)
@@ -143,7 +143,7 @@ endif()
 
 # Add targets
 add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE source/heapsort.cpp)
+target_sources(${PROJECT_NAME} PRIVATE source/hoaresort.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE project_options project_warnings)
 
