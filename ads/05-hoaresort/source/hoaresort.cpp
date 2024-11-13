@@ -22,8 +22,10 @@ void hoareSort(std::vector<int>& array, int left, int right) {
         }
     }
 
-    if (left < j) hoareSort(array, left, j);
-    if (i < right) hoareSort(array, i, right);
+    if (left < j) 
+        hoareSort(array, left, j);
+    if (i < right) 
+        hoareSort(array, i, right);
 }
 
 bool isSorted(const std::vector<int>& array) {
