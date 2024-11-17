@@ -9,7 +9,8 @@ BoolVector::Cell BoolVector::_mask(int index)
 
 bool BoolVector::bitValue(int index) const {
     assert(index >= 0 && index < m_length);
-    return m_cells[index / CellSize] & _mask(index);
+    Cell mask = _mask(index);
+    return m_cells[index / CellSize] & mask;
 }
 
 BoolVector::BoolVector(int length) : m_length(length) {
