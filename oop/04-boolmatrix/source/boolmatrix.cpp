@@ -64,4 +64,42 @@ void BoolMatrix::invertComponent(int j, int i) {
     m_rows[j].invert(i);
 }
 
+void BoolMatrix::invertComponents(int j, int i, int k) {
+    assert(j >= 0 && j < m_rowCount);
+    assert(i >= 0 && i + k <= m_colCount);
+    BoolVector& row = m_rows[j];
+    for (int index = i; index < i + k; ++index) {
+        row[index] = ~row[index];
+    }
+}
 
+void BoolMatrix::setComponent(int j, int i, bool value) {
+    assert(j >= 0 & j < m_rowCount);
+    m_rows[j].setBitValue(i, value);
+}
+
+
+void BoolMatrix::setComponents(int j, int i, int k, bool value) {
+    assert(j >= 0 & j < m_rowCount);
+    m_rows[j].setBits(i, k, value);
+}
+
+
+BoolVector BoolMatrix::conjunctionAllRows() const {
+    assert(m_rowCount > 0);
+    BoolVector result = m_rows[0];
+    for (int i = 1; i < m_rowCount; ++i) {
+        result = m_rows[i];
+    }
+    return result;
+}
+
+
+BoolVector BoolMatrix::disjunctionAllRows() const {
+    assert(m_rowCount > 0);
+    BoolVector result = m_rows[0];
+    for (int i = 1; i < m_rowCount; ++i) {
+        result |= m_rows[i];
+    }
+    return result;
+}

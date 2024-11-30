@@ -23,5 +23,12 @@ public:
     int weight() const;
     int rowWeight(int j) const;
     void invertComponent(int j, int i);
+
+    void invertComponents(int j, int i, int k);
+    void setComponent(int j, int i, bool value);
+    void setComponents(int j, int i, int k, bool value);
+    BoolVector conjunctionAllRows() const;
+    BoolVector disjunctionAllRows() const;
+
 };
 
