@@ -30,5 +30,20 @@ public:
     BoolVector conjunctionAllRows() const;
     BoolVector disjunctionAllRows() const;
 
+    BoolMatrix& operator=(const BoolMatrix& other);
+    BoolVector& operator[](int index);
+    const BoolVector& operator[](int index) const;
+    BoolMatrix operator&(const BoolMatrix& other) const;
+    BoolMatrix& operator&=(const BoolMatrix& other);
+    BoolMatrix operator|(const BoolMatrix& other) const;
+    BoolMatrix& operator|=(const BoolMatrix& other);
+    BoolMatrix operator^(const BoolMatrix& other) const;
+    BoolMatrix& operator^=(const BoolMatrix& other);
+    BoolMatrix operator~() const;
+
+    
+    friend std::ostream& operator<<(std::ostream& os, const BoolMatrix& matrix);
+    friend std::istream& operator>>(std::istream& is, BoolMatrix& matrix);
+
 };
 

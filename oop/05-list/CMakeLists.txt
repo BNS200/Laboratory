@@ -23,7 +23,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 # Project setup
-project(boolmatrix VERSION 0.0.1 LANGUAGES C CXX)
+project(list VERSION 0.0.1 LANGUAGES C CXX)
 
 # Add base interfaces for the project
 add_library(project_options INTERFACE)
@@ -143,20 +143,9 @@ endif()
 
 # Add targets
 add_library(${PROJECT_NAME})
-
-target_sources(${PROJECT_NAME} PRIVATE 
-    source/boolmatrix.cpp
-    source/boolvector.cpp
-)
-
-target_include_directories(${PROJECT_NAME} PUBLIC 
-    ${CMAKE_SOURCE_DIR}/include
-)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE 
-    project_options 
-    project_warnings
-)
+target_sources(${PROJECT_NAME} PRIVATE source/list.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_options project_warnings)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 if(ENABLE_CXX20_MODULES)
   add_library(${PROJECT_NAME}lib)
@@ -172,7 +161,7 @@ if(ENABLE_GTEST)
   find_package(GTest CONFIG REQUIRED)
   
   add_executable(${PROJECT_NAME}_test)
-  target_sources(${PROJECT_NAME}_test PRIVATE tests/testboolmatrix.cpp)
+  target_sources(${PROJECT_NAME}_test PRIVATE tests/testboolvector.cpp)
   target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME})
   #target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
   target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
