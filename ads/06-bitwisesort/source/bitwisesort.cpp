@@ -6,16 +6,19 @@
 #include <random>
 
 
-void bitwiseSortUnified(std::vector<int>& arr) {
-    int n = arr.size();
-    if (n <= 1) 
-    return; 
+void bitwiseSort(std::vector<int>& arr, int l, int r, int k) {
+    if (l >= r || k < 0) {
+        return;
+    }
 
-    
-    int i = 0, j = n - 1;
+    int i = l, j = r;
     while (i <= j) {
-        while (i <= j && arr[i] < 0) i++;
-        while (i <= j && arr[j] >= 0) j--;
+        while (i <= j && !(arr[i] & (1 << k))) {
+            i++;
+        }
+        while (i <= j && (arr[j] & (1 << k))) {
+            j--;
+        }
         if (i < j) {
             std::swap(arr[i], arr[j]);
             i++;
@@ -23,53 +26,42 @@ void bitwiseSortUnified(std::vector<int>& arr) {
         }
     }
 
-    
-    int negCount = i;
+    bitwiseSort(arr, l, j, k - 1);
+    bitwiseSort(arr, i, r, k - 1);
+}
+
+void bitwiseSortWithNegatives(std::vector<int>& arr) {
+    std::vector<int> negatives;
+    std::vector<int> nonNegatives;
 
     
-    if (negCount > 0) {
-        for (int k = 0; k < negCount; ++k) {
-            arr[k] = -arr[k]; 
+    for (size_t i = 0; i < arr.size(); i++) {
+        if (arr[i] < 0) {
+            negatives.push_back(-arr[i]); 
+        } else {
+            nonNegatives.push_back(arr[i]);
         }
+    }
 
-       
-        int maxBit = sizeof(int) * 8 - 1; 
-        for (int bit = 0; bit <= maxBit; ++bit) {
-            int l = 0, r = negCount - 1;
-            while (l <= r) {
-                while (l <= r && !(arr[l] & (1 << bit))) l++;
-                while (l <= r && (arr[r] & (1 << bit))) r--;
-                if (l < r) {
-                    std::swap(arr[l], arr[r]);
-                    l++;
-                    r--;
-                }
-            }
-        }
+    int maxBit = sizeof(int) * 8 - 1;
 
-        for (int k = 0; k < negCount; ++k) {
-            arr[k] = -arr[k]; 
-        }
-
-        
-        std::reverse(arr.begin(), arr.begin() + negCount);
+    
+    if (!negatives.empty()) {
+        bitwiseSort(negatives, 0, negatives.size() - 1, maxBit);
     }
 
     
-    if (negCount < n) {
-        int maxBit = sizeof(int) * 8 - 1; 
-        for (int bit = 0; bit <= maxBit; ++bit) {
-            int l = negCount, r = n - 1;
-            while (l <= r) {
-                while (l <= r && !(arr[l] & (1 << bit))) l++;
-                while (l <= r && (arr[r] & (1 << bit))) r--;
-                if (l < r) {
-                    std::swap(arr[l], arr[r]);
-                    l++;
-                    r--;
-                }
-            }
-        }
+    if (!nonNegatives.empty()) {
+        bitwiseSort(nonNegatives, 0, nonNegatives.size() - 1, maxBit);
+    }
+
+    
+    arr.clear();
+    for (size_t i = 0; i < negatives.size(); i++) {
+        arr.push_back(-negatives[negatives.size() - 1 - i]); 
+    }
+    for (size_t i = 0; i < nonNegatives.size(); i++) {
+        arr.push_back(nonNegatives[i]);
     }
 }
 
@@ -117,7 +109,7 @@ int main() {
                 std::vector<int> arrCopy = originalArray;
                 auto start = std::chrono::high_resolution_clock::now();
 
-                bitwiseSortUnified(arrCopy);
+                bitwiseSortWithNegatives(arrCopy);
 
                 auto end = std::chrono::high_resolution_clock::now();
                 totalTime += std::chrono::duration<double>(end - start).count();
