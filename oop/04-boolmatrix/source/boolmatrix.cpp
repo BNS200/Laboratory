@@ -128,12 +128,9 @@ const BoolVector& BoolMatrix::operator[](int index) const {
 }
 
 BoolMatrix BoolMatrix::operator|(const BoolMatrix& other) const {
-    assert(m_rowCount == other.m_rowCount && m_colCount == other.m_colCount);
-    BoolMatrix result(*this);
-        for (int i = 0; i < m_rowCount; ++i) {
-        result.m_rows[i] |= other.m_rows[i];
-    }
-    return result;
+    BoolMatrix result = *this; 
+    result |= other;          
+    return result;            
 }
 
 BoolMatrix& BoolMatrix::operator|=(const BoolMatrix& other) {
@@ -145,12 +142,9 @@ BoolMatrix& BoolMatrix::operator|=(const BoolMatrix& other) {
 }
 
 BoolMatrix BoolMatrix::operator^(const BoolMatrix& other) const {
-    assert(m_rowCount == other.m_rowCount && m_colCount == other.m_colCount);
-    BoolMatrix result(*this);
-    for (int i = 0; i < m_rowCount; ++i) {
-        result.m_rows[i] ^= other.m_rows[i];
-    }
-    return result;
+    BoolMatrix result = *this; 
+    result ^= other;          
+    return result;            
 }
 
 BoolMatrix& BoolMatrix::operator^=(const BoolMatrix& other) {
@@ -162,7 +156,7 @@ BoolMatrix& BoolMatrix::operator^=(const BoolMatrix& other) {
 }
 
 BoolMatrix BoolMatrix::operator~() const {
-    BoolMatrix result(*this);
+    BoolMatrix result = *this;
     for (int i = 0; i < m_rowCount; ++i) {
         result.m_rows[i].invert();  
         }
