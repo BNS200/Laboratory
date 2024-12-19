@@ -42,19 +42,13 @@ const int Set::power() const
  return weight();
 }
 
-Set& Set::operator=(const Set& other)
-{
- for (int i = 0; i < charSize; i++)
-  setBitValue(i, other.bitValue(i));
- return *this;
+Set& Set::operator=(const Set& other) {
+    BoolVector::operator=(other); 
+    return *this;
 }
 
-bool Set::operator==(const Set& other) const
-{
- for (int i = 0; i < charSize; i++)
-  if (bitValue(i) != other.bitValue(i))
-   return false;
- return true;
+bool Set::operator==(const Set& other) const {
+    return BoolVector::operator==(other);
 }
 
 bool Set::operator!=(const Set& other) const
@@ -62,83 +56,107 @@ bool Set::operator!=(const Set& other) const
  return !(*this == other);
 }
 
-Set Set::operator|(const Set& other) const
-{
- Set setCopy(*this);
- for (int i = 0; i < charSize; i++)
-  if (other.bitValue(i))
-   setCopy.m_add(i);
- return setCopy;
+Set Set::operator|(const Set& other) const {
+    Set result = *this; 
+    result |= other;    
+    return result;
 }
 
-Set& Set::operator|=(const Set& other)
-{
-    *this = *this | other; 
+Set& Set::operator|=(const Set& other) {
+    BoolVector::operator|=(other); 
     return *this;
 }
 
-Set Set::operator&(const Set& other) const
-{
- Set setCopy;
- for (int i = 0; i < charSize; i++)
-  if (other.bitValue(i) && bitValue(i))
-   setCopy.m_add(i);
- return setCopy;
+Set Set::operator&(const Set& other) const {
+    Set result = *this; 
+    result &= other;    
+    return result;
 }
 
-Set& Set::operator&=(const Set& other)
-{
-    *this = *this & other; 
+Set& Set::operator&=(const Set& other) {
+    BoolVector::operator&=(other); 
     return *this;
 }
 
-Set Set::operator/(const Set& other) const
-{
- Set setCopy;
- for (int i = 0; i < charSize; i++)
-  if (!other.bitValue(i) && bitValue(i))
-   setCopy.m_add(i);
- return setCopy;
+Set Set::operator/(const Set& other) const {
+    Set result = *this;
+    result /= other;    
+    return result;
 }
 
-Set& Set::operator/=(const Set& other)
-{
-    *this = *this / other; 
+Set& Set::operator/=(const Set& other) {
+    for (int i = 0; i < charSize; ++i) {
+        if (other.bitValue(i)) {   
+            setBitValue(i, false); 
+        }
+    }
     return *this;
 }
 
-Set Set::operator~() const
-{
- Set setCopy;
- for (int i = 0; i < charSize; i++)
-  if (!bitValue(i))
-   setCopy.m_add(i);
- return setCopy;
+Set Set::operator~() const {
+    Set result = *this;     
+    result.invert();        
+    return result;
 }
 
-Set Set::operator+(const char ch) const
-{
- Set setCopy = *this;
- setCopy.m_add(ch);
- return setCopy;
+Set Set::operator+(const char ch) const {
+    Set result = *this;    
+    result.add(ch);         
+    return result;
 }
 
-Set& Set::operator+=(const char ch)
-{
-    *this = *this + ch; 
+Set& Set::operator+=(const char ch) {
+    add(ch);                
     return *this;
 }
 
-Set Set::operator-(const char ch) const
-{
- Set setCopy = *this;
- setCopy.m_remove(ch);
- return setCopy;
+Set Set::operator-(const char ch) const {
+    Set result = *this;     
+    result.remove(ch);      
+    return result;
 }
 
-Set& Set::operator-=(const char ch)
-{
-    *this = *this - ch; 
+Set& Set::operator-=(const char ch) {
+    remove(ch);             
     return *this;
 }
 
+friend std::ostream& operator<<(std::ostream& os, const Set& set) {
+  os << "{";
+  bool first = true;
+  for (int i = 0; i < set.charSize; ++i) {
+      if (set.bitValue(i)) {
+          if (!first) {
+              os << ", ";
+          }
+          os << static_cast<char>(i + set.start);
+          first = false;
+          }
+  }
+  os << "}";
+  return os;
+}
+
+friend std::istream& operator>>(std::istream& is, Set& set) {
+  std::string input;
+  is >> input;
+
+  set.setAllBits(false); 
+  for (char c : input) {
+      if (c != '{' && c != '}' && c != ',' && c != ' ') { 
+          set.add(c);
+          }
+        }
+  return is;
+}
+
+
+void Set::addElement(const char ch)
+{
+ setBitValue(ch, true);
+}
+
+void Set::removeElement(const char ch)
+{
+ setBitValue(ch, false);
+}
