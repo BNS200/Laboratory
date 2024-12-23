@@ -18,12 +18,14 @@ public:
   inline void setNumerator (const int numerator) noexcept;
   inline void setDenominator (const int denominator);
 
-  Fraction &operator+ (const Fraction &fraction);
-  Fraction &operator- (const Fraction &fraction);
-  Fraction &operator* (const Fraction &fraction);
-  Fraction &operator/ (const Fraction &fraction);
+  Fraction operator+ (Fraction const b) const;
+  Fraction operator- (Fraction const b) const;
+  Fraction operator* (Fraction const b) const;
+  Fraction operator/ (Fraction const b) const;
   Fraction pow (int exponent);
   Fraction sqrt ();
+
+ 
 
   bool operator< (const Fraction &fraction) const;
   bool operator> (const Fraction &fraction) const;

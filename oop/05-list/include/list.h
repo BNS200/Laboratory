@@ -50,8 +50,8 @@ public:
 
     Node* searchElement(const T& value);
 
-    T& minElement() const;
-    T& maxElement() const;
+    T minElement() const;
+    T maxElement() const;
 
     T& operator[](int const index);
     const T& operator[](int const index) const;
@@ -370,7 +370,7 @@ Node* List<T>::searchElement(const T& valueSearch)
 }
 
 template<typename T>
-T& List<T>::minElement() const
+T List<T>::minElement() const
 {
     T minElement;
     minElement = m_head->next->value;
@@ -385,7 +385,7 @@ T& List<T>::minElement() const
 }
 
 template<typename T>
-T& List<T>::maxElement() const
+T List<T>::maxElement() const
 {
     T maxElement;
     maxElement = m_head->next->value;
@@ -412,7 +412,9 @@ template<typename T>
 const T& List<T>::operator[](int const index) const
 {
     assert(index >= 0 && index < m_size);
-    return(operator[](index));
+    Node* runner = m_head->next;
+    for (int i = 0; i != index; runner = runner->next, i++);
+    return(runner->value);
 }
 
 template<typename T>

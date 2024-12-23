@@ -39,12 +39,16 @@ public:
     T& operator[](int index);
     const T& operator[](int index) const;
     void swap(Array& other) noexcept;
-    Array& operator=(Array&& other); 
-    Array& operator+(Array& other);
+    Array& operator=(Array&& other);
+    Array& operator=(const Array& other); 
+    Array& operator+(const Array& other);
     Array& operator+=(const Array& other);
-    bool operator!=(Array& other);
-    bool operator==(Array& other);
+    bool operator!=(const Array& other) const;
+    bool operator==(const Array& other) const;
     void sortArray();
+
+    friend std::ostream& operator<<(std::ostream& os, const Array<T>& arr);
+    friend std::istream& operator>>(std::istream& is, Array<T>& arr);
 
   private:
     T* m_array = nullptr;
@@ -73,10 +77,10 @@ Array<T>::Array(const Array& other) {
 }
 
 template<typename T>
-Array<T>::Array(Array&& other):
-    m_size(std::move(other.m_size)),
-    m_array(std::move(other.m_array))
-{
+Array<T>::Array(Array&& other){
+    m_size = other.m_size;
+    m_array = other.m_array;
+    other.m_array = nullptr;
 }
 
 template<typename T>
@@ -251,8 +255,26 @@ Array<T>&  Array<T>::operator=(Array&& other){
     return *this;
 }
 
+template <typename ItemType>
+Array<ItemType>& Array<ItemType>::operator=(const Array<ItemType>& other)
+{
+	if (m_size == other.m_size)
+	{
+		for (int i = 0; i < m_size; ++i)
+		{
+			m_array[i] = other.m_array[i];
+		}
+	}
+	else
+	{
+		Array<ItemType> copy(other);
+		swap(copy);
+	}
+	return *this;
+}
+
 template<typename T>
-Array<T>& Array<T>::operator+(Array& other){
+Array<T>& Array<T>::operator+(const Array& other){
     Array result(m_size + other.m_size);
     for (int i = 0; i < m_size; ++i){
         result[i] = m_array[i];
@@ -261,6 +283,7 @@ Array<T>& Array<T>::operator+(Array& other){
     for (int i = 0;i < other.m_size; ++i){
         result[m_size + i] == other[i];
     }
+    return result;
 }
 
 template <typename T>
@@ -271,7 +294,7 @@ Array<T>& Array<T>::operator+=(const Array& other)
 }
 
 template<typename T>
-bool Array<T>::operator==(Array& other){
+bool Array<T>::operator==(const Array& other) const{
     if (m_size != other.m_size)
         return false;
     for (int i = 0; i < m_size; ++i){
@@ -282,11 +305,27 @@ bool Array<T>::operator==(Array& other){
 } 
 
 template<typename T>
-bool Array<T>::operator!=(Array& other){
+bool Array<T>::operator!=(const Array& other) const{
     return !(*this == other);
 }
 
 template<typename T>
 void Array<T>::sortArray() {
         std::sort(begin(), end());
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const Array<T>& arr) {
+    for (int i = 0; i < other.size(); i++)
+		os << other[i] << " ";
+	return os;
+}
+
+
+template<typename T>
+std::istream& operator>>(std::istream& is, Array<T>& arr) {
+    for (int i = 0; i < arr.size(); ++i) {
+        is >> arr[i];
     }
+    return is;
+}

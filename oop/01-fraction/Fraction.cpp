@@ -10,6 +10,13 @@ Fraction::Fraction(const int numerator = 0, const int denominator = 1)
 	setDenominator(denominator);
 	reducibleFraction();
 }
+void swap(int& a, int& b)
+{
+	int c;
+	c = a;
+	a = b;
+	b = c;
+}
 
 int Fraction::getDenominator()
 {
@@ -34,39 +41,33 @@ void Fraction::setDenominator (const int denominator)
     this->denominator = denominator;
 }
 	
-Fraction& Fraction::operator+(const Fraction& fraction)
+Fraction Fraction::operator+(Fraction const b) const
 {
-    this->setNumerator(this->numerator * fraction.denominator + this->denominator * fraction.numerator);
-    this->setDenominator(this->denominator * fraction.denominator);
-    reducibleFraction();
-    return *this;
+	Fraction a;
+	a.setNumerator(numerator * b.denominator + denominator * b.numerator);
+	a.setDenominator(denominator * b.denominator);
+	return a;
 }
-
-Fraction& Fraction::operator-(const Fraction& fraction)
+Fraction Fraction::operator-(Fraction const b) const
 {
-    this->setNumerator(this->numerator * fraction.denominator - this->denominator * fraction.numerator);
-    this->setDenominator(this->denominator * fraction.denominator);
-    reducibleFraction();
-    return *this;
-    
+	Fraction a;
+	a.setNumerator(numerator * b.denominator - denominator * b.numerator);
+	a.setDenominator(denominator * b.denominator);
+	return a;
 }
-
-Fraction& Fraction::operator*(const Fraction& fraction)
+Fraction Fraction::operator*(Fraction const b) const
 {
-    this->setNumerator(this->numerator * fraction.numerator);
-    this->setDenominator(this->denominator * fraction.denominator);
-    reducibleFraction();
-    return *this;
-    
+	Fraction a;
+	a.setNumerator(numerator * b.numerator);
+	a.setDenominator(denominator * b.denominator);
+	return a;
 }
-
-Fraction& Fraction::operator/(const Fraction& fraction)
-{ 
-    this->setNumerator(this->numerator * fraction.denominator);
-    this->setDenominator(this->denominator * fraction.numerator);
-    reducibleFraction();
-    return *this;
-   
+Fraction Fraction::operator/(Fraction const b) const
+{
+	Fraction a;
+	a.setNumerator(numerator * b.denominator);
+	a.setDenominator(denominator * b.numerator);
+	return a;
 }
 
 bool Fraction::operator<(const Fraction& fraction) const
@@ -99,7 +100,13 @@ Fraction Fraction::inputFraction()
 	std::cin >> numerator;
 	std::cout << "/";
 	std::cin >> denominator;
-    return Fraction(numerator, denominator);
+    
+    if (denominator == 0)
+	{
+		std::cout << "Denominator cannot be 0"<< std::endl;
+		numerator = 0;
+		denominator = 1;
+	}
 }
 
 void Fraction::reducibleFraction()
@@ -114,7 +121,18 @@ void Fraction::reducibleFraction()
 }
 
 Fraction Fraction::pow(int exponent){
-    return Fraction(static_cast<int>(std::pow(numerator, exponent)), static_cast<int>(std::pow(denominator, exponent)));
+    Fraction a;
+	if (exponent < 0)
+	{
+		swap(numerator, denominator);
+		exponent = -exponent;
+	}
+	for (int i = 0; i < exponent; i++)
+	{
+		a.setNumerator(a.numerator * numerator);
+		a.setDenominator(a.denominator * denominator);
+	}
+	return a;
 }
 
 Fraction Fraction::sqrt(){
