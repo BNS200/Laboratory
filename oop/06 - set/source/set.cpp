@@ -9,7 +9,7 @@ Set::Set(const char* array, int const size)
  :BoolVector(charSize)
 {
  for (int i = 0; i < size; i++)
-  m_add(array[i]);
+  addElement(array[i]);
 }
 
 Set::Set(const Set& other)
@@ -84,13 +84,10 @@ Set Set::operator/(const Set& other) const {
     return result;
 }
 
-Set& Set::operator/=(const Set& other) {
-    for (int i = 0; i < charSize; ++i) {
-        if (other.bitValue(i)) {   
-            setBitValue(i, false); 
-        }
-    }
-    return *this;
+Set& Set::operator/=(const Set& other)
+{
+  *this = *this / other;
+  return *this;
 }
 
 Set Set::operator~() const {
@@ -101,12 +98,12 @@ Set Set::operator~() const {
 
 Set Set::operator+(const char ch) const {
     Set result = *this;    
-    result.add(ch);         
+    result.addElement(ch);         
     return result;
 }
 
 Set& Set::operator+=(const char ch) {
-    add(ch);                
+    addElement(ch);                
     return *this;
 }
 
@@ -144,7 +141,7 @@ friend std::istream& operator>>(std::istream& is, Set& set) {
   set.setAllBits(false); 
   for (char c : input) {
       if (c != '{' && c != '}' && c != ',' && c != ' ') { 
-          set.add(c);
+          set.addElement(c);
           }
         }
   return is;
