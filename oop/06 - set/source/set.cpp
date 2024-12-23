@@ -79,9 +79,8 @@ Set& Set::operator&=(const Set& other) {
 }
 
 Set Set::operator/(const Set& other) const {
-    Set result = *this;
-    result /= other;    
-    return result;
+    Set set = (BoolVector::operator&(~other));
+    return set;
 }
 
 Set& Set::operator/=(const Set& other)
