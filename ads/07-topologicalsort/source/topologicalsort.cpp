@@ -27,7 +27,7 @@ std::vector<int> topologicalSort(const BoolMatrix& matrix) {
     while (!zeroInDegree.empty()) {
         int element = zeroInDegree.front();
         zeroInDegree.pop();
-        result.push_back(u);
+        result.push_back(element);
 
         for (int v = 0; v < n; ++v) {
             if (matrix[element][v]) { 
