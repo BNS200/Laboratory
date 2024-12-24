@@ -1,8 +1,9 @@
 ﻿{
   "dependencies": [
-    "gtest"
+    
   ],
   "$move_it_to_dependencies_if_needed": [
+    "gtest",
     "tbb",
     "pthread",
     "numcpp",

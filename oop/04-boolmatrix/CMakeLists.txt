@@ -158,6 +158,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     project_warnings
 )
 
+
+add_library(boolmatrix STATIC
+    source/boolmatrix.cpp
+)
+
+
+target_include_directories(boolmatrix PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 if(ENABLE_CXX20_MODULES)
   add_library(${PROJECT_NAME}lib)
   target_sources(${PROJECT_NAME}lib PUBLIC FILE_SET cxx_modules TYPE CXX_MODULES FILES source/module.cxx)

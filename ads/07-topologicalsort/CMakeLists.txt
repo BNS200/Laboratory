@@ -23,7 +23,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 # Project setup
-project(boolmatrix VERSION 0.0.1 LANGUAGES C CXX)
+project(topologicalsort VERSION 0.0.1 LANGUAGES C CXX)
 
 # Add base interfaces for the project
 add_library(project_options INTERFACE)
@@ -73,7 +73,7 @@ option(ENABLE_CPPCHECK "Enable cppcheck" ON)
 option(ENABLE_CLANG_TIDY "Enable clang-tidy" ON)
 option(ENABLE_CCACHE "Enable ccache" ON)
 
-option(ENABLE_GTEST "Enable unit tests" ON)
+option(ENABLE_GTEST "Enable unit tests" OFF)
 option(ENABLE_XTENSOR "Enable xtensor" OFF)
 option(ENABLE_CBLAS "Enable cblas" OFF)
 option(ENABLE_EIGEN3 "Enable eigen3" OFF)
@@ -134,29 +134,17 @@ if(ENABLE_CCACHE)
   find_program(CCACHE_PROGRAM ccache)
   if(CCACHE_PROGRAM)
     set(ccacheEnv CCACHE_BASEDIR=${CMAKE_BINARY_DIR} CCACHE_CPP2=true CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_ctime)
-    set(CMAKE_C_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_PROGRAM} PARENT_SCOPE)
-    set(CMAKE_CXX_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_PROGRAM} PARENT_SCOPE)
+    #set(CMAKE_C_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_PROGRAM} PARENT_SCOPE)
+    #set(CMAKE_CXX_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_PROGRAM} PARENT_SCOPE)
   else ()
     message(WARNING "Could not find ccache, skipping!")
   endif ()
 endif()
 
-# Add targets
-add_library(${PROJECT_NAME})
+add_executable(topologicalsort source/topologicalsort.cpp)
+target_link_libraries(topologicalsort PRIVATE boolmatrix)
+target_include_directories(topologicalsort PRIVATE ${CMAKE_SOURCE_DIR}/../oop/04-boolmatrix/include)
 
-target_sources(${PROJECT_NAME} PRIVATE 
-    source/boolmatrix.cpp
-    source/boolvector.cpp
-)
-
-target_include_directories(${PROJECT_NAME} PUBLIC 
-    ${CMAKE_SOURCE_DIR}/include
-)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE 
-    project_options 
-    project_warnings
-)
 
 if(ENABLE_CXX20_MODULES)
   add_library(${PROJECT_NAME}lib)
@@ -167,29 +155,29 @@ if(ENABLE_CXX20_MODULES)
 endif()
 
 # Toggle GoogleTest unit tests
-if(ENABLE_GTEST)
-  enable_testing()
-  find_package(GTest CONFIG REQUIRED)
+
+  #if(ENABLE_GTEST)
+  #enable_testing()
+  #find_package(GTest CONFIG REQUIRED)
   
-  add_executable(${PROJECT_NAME}_test)
-  target_sources(${PROJECT_NAME}_test PRIVATE tests/testboolmatrix.cpp)
-  target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME})
+  #add_executable(${PROJECT_NAME}_test)
+  #target_sources(${PROJECT_NAME}_test PRIVATE tests/test.cxx)
+  #target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
   #target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
-  target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
-  target_link_libraries(${PROJECT_NAME}_test PRIVATE project_options project_warnings)
-  target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+  #target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
+  #target_link_libraries(${PROJECT_NAME}_test PRIVATE project_options project_warnings)
 
   if(ENABLE_CXX20_MODULES)
     target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}lib)
     target_compile_definitions(${PROJECT_NAME}_test PUBLIC USE_CXX20_MODULES)
   endif()
 
-  set(GTEST_TIMEOUT 10)
+  #set(GTEST_TIMEOUT 10)
 
-  include(CTest)
-  include(GoogleTest)
-  gtest_discover_tests(${PROJECT_NAME}_test)
-endif()
+  #include(CTest)
+  #include(GoogleTest)
+  #gtest_discover_tests(${PROJECT_NAME})
+#endif()
 
 # Toggle Xtensor
 if(ENABLE_XTENSOR)

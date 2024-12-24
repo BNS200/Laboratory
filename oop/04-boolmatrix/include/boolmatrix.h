@@ -22,6 +22,7 @@ public:
     void swap(BoolMatrix& other);
     int weight() const;
     int rowWeight(int j) const;
+    int columnWeight(int j) const;
     void invertComponent(int j, int i);
 
     void invertComponents(int j, int i, int k);

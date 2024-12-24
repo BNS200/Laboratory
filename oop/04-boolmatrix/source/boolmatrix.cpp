@@ -58,6 +58,15 @@ int BoolMatrix::rowWeight(int j) const {
     return m_rows[j].weight();
 }
 
+int BoolMatrix::columnWeight(int j) const{
+    assert(j >= 0 && j < m_rowCount);
+	int k = 0;
+	for (int i = 0; i < m_rowCount; i++)
+		if (m_rows[i].bitValue(j) != 0)
+			k++;
+	return k;
+}
+
 
 void BoolMatrix::invertComponent(int j, int i) {
     assert(j >= 0 && j < m_rowCount);
