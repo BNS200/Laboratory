@@ -41,7 +41,7 @@ public:
     void swap(Array& other) noexcept;
     Array& operator=(Array&& other);
     Array& operator=(const Array& other); 
-    Array& operator+(const Array& other);
+    Array operator+(const Array& other);
     Array& operator+=(const Array& other);
     bool operator!=(const Array& other) const;
     bool operator==(const Array& other) const;
@@ -274,27 +274,27 @@ Array<ItemType>& Array<ItemType>::operator=(const Array<ItemType>& other)
 }
 
 template<typename T>
-Array<T>& Array<T>::operator+(const Array& other){
+Array<T> Array<T>::operator+(const Array<T>& other){
     Array result(m_size + other.m_size);
     for (int i = 0; i < m_size; ++i){
         result[i] = m_array[i];
     }
 
     for (int i = 0;i < other.m_size; ++i){
-        result[m_size + i] == other[i];
+        result[m_size + i] = other[i];
     }
     return result;
 }
 
 template <typename T>
-Array<T>& Array<T>::operator+=(const Array& other)
+Array<T>& Array<T>::operator+=(const Array<T>& other)
 {
     operator+(other).swap(*this);
     return *this;
 }
 
 template<typename T>
-bool Array<T>::operator==(const Array& other) const{
+bool Array<T>::operator==(const Array<T>& other) const{
     if (m_size != other.m_size)
         return false;
     for (int i = 0; i < m_size; ++i){
@@ -305,7 +305,7 @@ bool Array<T>::operator==(const Array& other) const{
 } 
 
 template<typename T>
-bool Array<T>::operator!=(const Array& other) const{
+bool Array<T>::operator!=(const Array<T>& other) const{
     return !(*this == other);
 }
 
