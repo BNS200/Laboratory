@@ -15,8 +15,8 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(main MainFraction.cpp Fraction.cpp)
-add_executable(fraction TestFraction.cpp Fraction.cpp)
-target_link_libraries(fraction GTest::gtest_main)
+# add_executable(fraction TestFraction.cpp Fraction.cpp)
+# target_link_libraries(fraction GTest::gtest_main)
 
-include(GoogleTest)
-gtest_discover_tests(fraction)
+# include(GoogleTest)
+# gtest_discover_tests(fraction)

@@ -12,6 +12,9 @@ private:
 
 public:
   Fraction (const int numerator = 0, const int denominator = 1);
+  Fraction(const Fraction& other);
+  Fraction(Fraction&& other);
+  Fraction& operator=(const Fraction& other);
   
   inline int getNumerator () noexcept;
   inline int getDenominator () noexcept;
@@ -32,7 +35,7 @@ public:
   bool operator== (const Fraction &fraction) const;
   bool operator!= (const Fraction &fraction) const;
 
-  Fraction inputFraction ();
+  void inputFraction ();
   void outputFraction () const;
   void reducibleFraction ();
 };

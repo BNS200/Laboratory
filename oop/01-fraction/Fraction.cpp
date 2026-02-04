@@ -4,12 +4,33 @@
 #include "Fraction.h"
 #include <numeric>
 
-Fraction::Fraction(const int numerator = 0, const int denominator = 1)
+Fraction::Fraction(const int numerator, const int denominator)
 {
 	setNumerator(numerator);
 	setDenominator(denominator);
 	reducibleFraction();
 }
+Fraction::Fraction(const Fraction& other){
+	this->denominator = other.denominator;
+	this->numerator = other.numerator; 
+}
+
+Fraction::Fraction(Fraction&& other){
+	this->denominator = std::move(other.denominator);
+	this->numerator = std::move(other.numerator);
+	other.denominator = 0;
+	other.numerator = 0;
+}
+
+Fraction& Fraction::operator=(const Fraction& other){
+	if (this != &other){
+			this->denominator = other.denominator;
+			this->numerator = other.numerator;
+	}
+
+	return *this;
+}
+
 void swap(int& a, int& b)
 {
 	int c;
@@ -18,17 +39,17 @@ void swap(int& a, int& b)
 	b = c;
 }
 
-int Fraction::getDenominator()
+int Fraction::getDenominator() noexcept
 {
 	return this->denominator;
 }
 
-int Fraction::getNumerator()
+int Fraction::getNumerator() noexcept
 {
 	return this->numerator;
 }
 
-void Fraction::setNumerator(const int numerator)
+void Fraction::setNumerator(const int numerator) noexcept
 {
 	this->numerator = numerator;
 }
@@ -72,7 +93,7 @@ Fraction Fraction::operator/(Fraction const b) const
 
 bool Fraction::operator<(const Fraction& fraction) const
 {
-	return this->numerator / fraction.denominator < this->denominator / fraction.numerator;
+	return this->numerator / this->denominator < fraction.numerator / fraction.denominator;
 }
 
 bool Fraction::operator>(const Fraction& fraction) const
@@ -95,7 +116,7 @@ void Fraction::outputFraction() const
     std::cout << numerator << "/" << denominator << std::endl;
 }
 
-Fraction Fraction::inputFraction()
+void Fraction::inputFraction()
 {
 	std::cin >> numerator;
 	std::cout << "/";
@@ -140,4 +161,6 @@ Fraction Fraction::sqrt(){
             throw std::invalid_argument("The number cannot be negative");
         }
         return Fraction(static_cast<int>(std::sqrt(numerator)), static_cast<int>(std::sqrt(denominator)));
-    }
+}
+
+

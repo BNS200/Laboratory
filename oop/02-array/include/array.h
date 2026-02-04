@@ -3,10 +3,11 @@
 #include <assert.h>
 #include <algorithm>
 #include <utility>
-
-
+#include <stdexcept>
+#include <random>
 
 template<typename T>
+
 class Array
 {
 public:
@@ -15,21 +16,32 @@ public:
     typedef T& reference;
     typedef T* pointer;
     typedef int difference_type;
+    typedef const T* const_iterator;
+
+    typedef size_t size_type;
+//     typedef std::reverse_iterator<iterator> reverse_iterator;
+//     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 public:
-    Array(int size, const T fillvalue = T());
+    Array(int size, const T fillvalue);
     Array(const Array& other);
     Array(Array&& other);
+    Array(int size);
     ~Array();
 
+
+    
     iterator begin();
     iterator end();
+    std::reverse_iterator<iterator> rbegin();
+    std::reverse_iterator<iterator> rend();
     const iterator begin() const;
     const iterator end() const;
     void outputArray() const;
     void inputArray();
     int getSize() const noexcept;
     bool insert(const int index, const T& value);
+    bool insertSeveral(const int& index, const int& count, const T& value);
     int findFirstOccurrence(const T& value) const;
     bool removeByIndex(const int index);
     bool removeByValue(const T& value);
@@ -46,14 +58,37 @@ public:
     bool operator!=(const Array& other) const;
     bool operator==(const Array& other) const;
     void sortArray();
-
-    friend std::ostream& operator<<(std::ostream& os, const Array<T>& arr);
-    friend std::istream& operator>>(std::istream& is, Array<T>& arr);
+    template<typename U>
+    friend std::ostream& operator<<(std::ostream& os, const Array<U>& arr);
+    template<typename U>
+    friend std::istream& operator>>(std::istream& is, Array<U>& arr);
+    void bubbleSort();
+    static Array<T> getRandomArray(int size);
 
   private:
     T* m_array = nullptr;
     int m_size = 0;     
 };
+
+template<typename T>
+Array<T>::iterator Array<T>::begin(){
+    return m_array;
+}
+
+template<typename T>
+Array<T>::iterator Array<T>::end(){
+    return m_array + m_size;
+}
+
+template<typename T>
+std::reverse_iterator<T*> Array<T>::rbegin(){
+    return std::make_reverse_iterator(end());
+}
+
+template<typename T>
+std::reverse_iterator<T*> Array<T>::rend(){
+    return std::make_reverse_iterator(begin());
+}
 
 template<typename T>
 Array<T>::Array(int size, const T fillvalue) {
@@ -78,14 +113,22 @@ Array<T>::Array(const Array& other) {
 
 template<typename T>
 Array<T>::Array(Array&& other){
-    m_size = other.m_size;
-    m_array = other.m_array;
+    m_size = std::move(other.m_size);
+    m_array = std::move(other.m_array);
     other.m_array = nullptr;
+    other.m_size = 0;
 }
 
 template<typename T>
 Array<T>::~Array() {
     delete[] m_array;
+}
+
+template<typename T>
+Array<T>::Array(int size) : m_size(size), m_array(nullptr){
+    if (size > 0){
+        m_array = new T[m_size];
+    }
 }
 
 template<typename T>
@@ -106,6 +149,29 @@ bool Array<T>::insert(const int index, const T& value)
     m_array = newArray;
     m_size++;
 
+    return true;
+}
+
+template<typename T> 
+
+bool Array<T>::insertSeveral(const int& index,  const int& count, const T& value){
+    if (index < 0){
+        throw std::invalid_argument("Index must be > 0");
+    }
+    T* new_array = new T[m_size + count];
+    for (int i = 0; i < index; ++i){
+        new_array[i] = m_array[i];
+    }
+    for (int i = index; i < index + count; ++i){
+        new_array[i] = value;
+    }
+    for (int i = index + count; i < m_size; ++i){
+        new_array[i] = m_array[i];
+    }
+
+    delete[] m_array;
+    m_array = new_array;
+    m_size = m_size + count;
     return true;
 }
 
@@ -289,7 +355,7 @@ Array<T> Array<T>::operator+(const Array<T>& other){
 template <typename T>
 Array<T>& Array<T>::operator+=(const Array<T>& other)
 {
-    operator+(other).swap(*this);
+    *this = std::move(*this + other);
     return *this;
 }
 
@@ -315,17 +381,45 @@ void Array<T>::sortArray() {
 }
 
 template<typename T>
-std::ostream& operator<<(std::ostream& os, const Array<T>& arr) {
-    for (int i = 0; i < other.size(); i++)
-		os << other[i] << " ";
-	return os;
+void Array<T>::bubbleSort(){
+    for (int i = 0; i < m_size - 1; ++i){
+        bool swaped = false;
+        for(int j = 0; j < m_size - i - 1; ++j){
+            if (m_array[j] > m_array[j + 1]){
+                std::swap(m_array[j], m_array[j+1]);
+            }
+            swaped = true;
+        }
+        if (!swaped)
+            break;
+    }
+}
+
+template<typename T>
+Array<T> Array<T>::getRandomArray(int size){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribution(0, 100);
+    Array<T> arr(size);
+    for (int i = 0; i < size; ++i ){
+        arr[i] = distribution(gen);
+    }
+    return arr;
 }
 
 
 template<typename T>
 std::istream& operator>>(std::istream& is, Array<T>& arr) {
-    for (int i = 0; i < arr.size(); ++i) {
+    for (int i = 0; i < arr.getSize(); ++i) {
         is >> arr[i];
     }
     return is;
-}
+    }
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const Array<T>& arr) {
+    for (int i = 0; i < arr.getSize(); i++)
+		os << arr[i] << " ";
+	return os;
+    }
+
